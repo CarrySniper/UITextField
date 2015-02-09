@@ -10,6 +10,7 @@
 
 @interface ViewController : UIViewController<UITextFieldDelegate>
 
-@property(nonatomic,strong)UITextField *textField;
+@property(nonatomic,strong)UITextField *accountTextField;
+@property(nonatomic,strong)UITextField *passwordTextField;
 
 @end

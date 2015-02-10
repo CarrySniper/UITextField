@@ -18,21 +18,42 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor orangeColor];
+    self.navigationItem.title = @"UITextField登陆页";
     
-    self.accountTextField = [[UITextField alloc]initWithFrame:CGRectMake(10, 80, self.view.frame.size.width-20, 30)];
+    UILabel *accountLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 100, 40, 25)];
+    accountLabel.backgroundColor = [UIColor clearColor];
+    accountLabel.text = @"账号";
+    [self.view addSubview:accountLabel];
+    
+    UILabel *passwordLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 140, 40, 25)];
+    passwordLabel.backgroundColor = [UIColor clearColor];
+    passwordLabel.text = @"密码";
+    [self.view addSubview:passwordLabel];
+    
+    
+    self.accountTextField = [[UITextField alloc]initWithFrame:CGRectMake(50, 100, self.view.frame.size.width-60, 25)];
     [self.view addSubview:self.accountTextField];
     self.accountTextField.delegate = self;
     
-    self.passwordTextField = [[UITextField alloc]initWithFrame:CGRectMake(10, 120, self.view.frame.size.width-20, 30)];
+    self.passwordTextField = [[UITextField alloc]initWithFrame:CGRectMake(50, 140, self.view.frame.size.width-60, 25)];
     [self.view addSubview:self.passwordTextField];
     self.passwordTextField.delegate = self;
     
+    
+    UIButton *loginButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    loginButton.frame = CGRectMake(70, 200, self.view.frame.size.width-100, 30);
+    loginButton.backgroundColor = [UIColor purpleColor];
+    [loginButton setTitle:@"登   陆" forState:UIControlStateNormal];
+    [loginButton addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:loginButton];
+    
+    loginButton.layer.cornerRadius = 6;
     //设置样式属性
     self.accountTextField.borderStyle = UITextBorderStyleRoundedRect;//圆角
     self.passwordTextField.borderStyle = UITextBorderStyleRoundedRect;
     
     //设置提示文字属性
-    self.accountTextField.placeholder = @"请输入账号";
+    self.accountTextField.placeholder = @"请输入账号（10个中文以内）";
     self.passwordTextField.placeholder = @"请输入密码";
     
     //设置文字颜色属性
@@ -83,6 +104,18 @@
     //密码内容安全输入
     self.passwordTextField.secureTextEntry = YES;
     
+    
+}
+
+- (void)btnClick:(UIButton*)sender{
+    
+    NSString *accountStr = self.accountTextField.text;
+    NSString *passwordStr = self.passwordTextField.text;
+    
+    NSString *message = [NSString stringWithFormat:@"账号：%@  密码：%@",accountStr,passwordStr];
+    
+    UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"登陆" message:message delegate:nil cancelButtonTitle:@"取消" otherButtonTitles: @"确定",nil];
+    [alertView show];
     
 }
 

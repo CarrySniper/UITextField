@@ -40,6 +40,15 @@
     self.passwordTextField.delegate = self;
     
     
+    UITextField *textField = [[UITextField alloc]initWithFrame:CGRectMake(10, 450, 300, 30)];
+    textField.placeholder = @"textField";
+    [self.view addSubview:textField];
+    
+    textField.delegate = self;
+    
+    textField.borderStyle = UITextBorderStyleRoundedRect;//圆角
+    
+    
     UIButton *loginButton = [UIButton buttonWithType:UIButtonTypeCustom];
     loginButton.frame = CGRectMake(70, 200, self.view.frame.size.width-100, 30);
     loginButton.backgroundColor = [UIColor purpleColor];
@@ -121,13 +130,37 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     NSLog(@"将要开始编辑？");
+    
+    CGFloat offset = self.view.frame.size.height - (textField.frame.origin.y + textField.frame.size.height + 216 + 50) ;
+    
+    NSLog(@"aa %f",offset);
+    if (offset<=0) {
+        [UIView animateWithDuration:0.3 animations:^{
+            
+            CGRect frame = self.view.frame;
+            frame.origin.y = offset;
+            self.view.frame = frame;
+            
+        }];
+    }
+    
     return YES;
 }// return NO to disallow editing.
+
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
     NSLog(@"开始编辑。");
 }// became first responder
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField{
     NSLog(@"将要结束编辑？");
+
+    [UIView animateWithDuration:0.3 animations:^{
+        
+        CGRect frame = self.view.frame;
+        frame.origin.y = 0.0;
+        self.view.frame = frame;
+        
+    }];
+    
     return YES;
 }// return YES to allow editing to stop and to resign first responder status. NO to disallow the editing session to end
 - (void)textFieldDidEndEditing:(UITextField *)textField{

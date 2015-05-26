@@ -2,7 +2,7 @@
 //  ViewController.m
 //  UITextField的创建与使用
 //
-//  Created by 陈家庆 on 15-2-9.
+//  Created by CK_chan on 15-2-9.
 //  Copyright (c) 2015年 shikee_Chan. All rights reserved.
 //
 
@@ -47,6 +47,12 @@
     textField.delegate = self;
     
     textField.borderStyle = UITextBorderStyleRoundedRect;//圆角
+    
+    UITextField *textField1 = [[UITextField alloc]initWithFrame:CGRectMake(10, 500, 300, 30)];
+    textField1.placeholder = @"textField1";
+    [self.view addSubview:textField1];
+    
+    textField1.delegate = self;textField1.borderStyle = UITextBorderStyleRoundedRect;//圆角
     
     
     UIButton *loginButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -113,9 +119,38 @@
     //密码内容安全输入
     self.passwordTextField.secureTextEntry = YES;
     
-    
+    //增加监听，当键盘出现或改变时收出消息
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+}
+static CGFloat keyboardHeight;
+//当键盘出现或改变时调用
+- (void)keyboardWillShow:(NSNotification *)notification
+{
+    //获取键盘的高度
+    NSDictionary *userInfo = [notification userInfo];
+    NSValue *value = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardRect = [value CGRectValue];
+    keyboardHeight = keyboardRect.size.height + 10;
 }
 
+- (void)fitKeyboard:(UITextField *)textField{
+    
+    CGFloat offset = self.view.frame.size.height - (textField.frame.origin.y + textField.frame.size.height + (keyboardHeight > 216 ? keyboardHeight : 236)) ;
+    
+    NSLog(@"aa %f",keyboardHeight);
+    if (offset<=0) {
+        [UIView animateWithDuration:0.3 animations:^{
+            
+            CGRect frame = self.view.frame;
+            frame.origin.y = offset;
+            self.view.frame = frame;
+            
+        }];
+    }
+}
 - (void)btnClick:(UIButton*)sender{
     
     NSString *accountStr = self.accountTextField.text;
@@ -131,24 +166,15 @@
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     NSLog(@"将要开始编辑？");
     
-    CGFloat offset = self.view.frame.size.height - (textField.frame.origin.y + textField.frame.size.height + 216 + 50) ;
     
-    NSLog(@"aa %f",offset);
-    if (offset<=0) {
-        [UIView animateWithDuration:0.3 animations:^{
-            
-            CGRect frame = self.view.frame;
-            frame.origin.y = offset;
-            self.view.frame = frame;
-            
-        }];
-    }
     
     return YES;
 }// return NO to disallow editing.
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
     NSLog(@"开始编辑。");
+
+    [self fitKeyboard:textField];
 }// became first responder
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField{
     NSLog(@"将要结束编辑？");
@@ -169,6 +195,8 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     NSLog(@"将要改变内容？");
+    
+   [self fitKeyboard:textField];
     
     NSUInteger maxLength = 10;
     NSString *toBeString = [textField.text stringByReplacingCharactersInRange:range withString:string];

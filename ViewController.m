@@ -122,7 +122,7 @@
     //增加监听，当键盘出现或改变时收出消息
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification
+                                                 name:UIKeyboardDidShowNotification
                                                object:nil];
 }
 static CGFloat keyboardHeight;
@@ -135,10 +135,10 @@ static CGFloat keyboardHeight;
     CGRect keyboardRect = [value CGRectValue];
     keyboardHeight = keyboardRect.size.height + 10;
 }
-
+//计算键盘抬起高度
 - (void)fitKeyboard:(UITextField *)textField{
     
-    CGFloat offset = self.view.frame.size.height - (textField.frame.origin.y + textField.frame.size.height + (keyboardHeight > 216 ? keyboardHeight : 236)) ;
+    CGFloat offset = self.view.frame.size.height - (textField.frame.origin.y + textField.frame.size.height + (keyboardHeight > 216 ? keyboardHeight : 256)) ;
     
     NSLog(@"aa %f",keyboardHeight);
     if (offset<=0) {
